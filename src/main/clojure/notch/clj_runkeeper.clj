@@ -7,10 +7,10 @@
 
 
 (do
-  (def properties (-> (io/resource "runkeeper.properties.clj")
-                    (io/as-file)
-                    (slurp)
-                    (read-string)))
+  (def properties (-> (clojure.java.io/resource "runkeeper.properties.clj")
+                    (clojure.java.io/reader)
+                    (java.io.PushbackReader.)
+                    (read)))
 
   (def client_id (:client_id properties))
   (def client_secret (:client_secret properties))
@@ -19,11 +19,17 @@
 
 (defn get-auth-url
   "Send the user to this URL for first part of OAuth"
-  [callback_url]
+  ([callback_url]
   (str "https://runkeeper.com/apps/authorize?"
     "client_id=" client_id
     "&response_type=code"
     "&redirect_uri=" (java.net.URLEncoder/encode callback_url)))
+  ([callback_url state]
+    (str "https://runkeeper.com/apps/authorize?"
+      "client_id=" client_id
+      "&response_type=code"
+      "&redirect_uri=" (java.net.URLEncoder/encode callback_url)
+      "&state=" (java.net.URLEncoder/encode state))))
 
 
 (defn complete-oauth
@@ -39,8 +45,7 @@
                        :redirect_uri callback_url
                        }})
     :body
-    json/read-json
-    ))
+    json/read-json))
 
 (defn get-user
   "Returns user ID + URIs for health graph sections"
@@ -48,9 +53,7 @@
   (-> (http/get (str api_url "/user")
         {:oauth-token access_token})
     :body
-    json/read-json
-    )
-  )
+    json/read-json))
 
 (defn get-fitness-activities
   "Returns a list of fitness activities (runs)"
@@ -60,10 +63,7 @@
           {:oauth-token access_token})
       :body
       json/read-json
-      :items
-      )
-    )
-  )
+      :items)))
 
 (defn get-fitness-activity
   "Returns the details of a fitness activity (run)"
@@ -72,7 +72,4 @@
     (-> (http/get url
           {:oauth-token access_token})
       :body
-      json/read-json
-      )
-    )
-  )
+      json/read-json)))

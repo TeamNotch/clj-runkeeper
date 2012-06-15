@@ -17,8 +17,11 @@
 
   ;;Rough smoke test
   (is (string? (get-auth-url "http://notch.me/somethinghere")))
+  (is (string? (get-auth-url "http://notch.me/somethinghere" "somestatehere")))
   (is (map? (get-user test_auth)))
   (is (vector? (get-fitness-activities test_auth)))
   (is (map? (get-fitness-activity test_auth (:uri (first (get-fitness-activities test_auth))))))
 
   )
+
+(is (map? (get-user test_auth)))

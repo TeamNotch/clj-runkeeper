@@ -1,6 +1,6 @@
 (defproject notch/clj-runkeeper "0.0.1-SNAPSHOT"
   :description "Runkeeper API Clojure Wrapper"
-  :dependencies [[org.clojure/clojure "1.3.0"]
+  :dependencies [[org.clojure/clojure "1.4.0"]
                  [org.clojure/tools.logging "0.2.3"]
                  [org.clojure/tools.trace "0.7.1"]
                  [org.clojure/data.json "0.1.2"]
