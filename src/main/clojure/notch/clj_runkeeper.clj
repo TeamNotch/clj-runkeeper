@@ -51,19 +51,25 @@
   "Returns user ID + URIs for health graph sections"
   [{access_token :access_token}]
   (-> (http/get (str api_url "/user")
-        {:oauth-token access_token})
+        { :oauth-token access_token})
     :body
     json/read-json))
 
 (defn get-fitness-activities
   "Returns a list of fitness activities (runs)"
-  [{access_token :access_token}]
-  (let [url (str api_url (:fitness_activities (get-user {:access_token access_token})))]
-    (-> (http/get url
-          {:oauth-token access_token})
-      :body
-      json/read-json
-      :items)))
+  ([{access_token :access_token}]
+    (get-fitness-activities {:access_token access_token} 0))
+  ([{access_token :access_token} page]
+    (get-fitness-activities {:access_token access_token} page 20))
+  ([{access_token :access_token} page page_size]
+    (let [url (str api_url (:fitness_activities (get-user {:access_token access_token})))]
+      (-> (http/get url
+            {:query-params {:page page
+                            :pageSize page_size}
+             :oauth-token access_token})
+        :body
+        json/read-json
+        :items))))
 
 (defn get-fitness-activity
   "Returns the details of a fitness activity (run)"

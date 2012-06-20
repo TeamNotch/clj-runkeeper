@@ -9,6 +9,7 @@
 
   )
 
+
 (do
   (def test_auth {:access_token (:test_access_token properties)})
   )
@@ -20,8 +21,9 @@
   (is (string? (get-auth-url "http://notch.me/somethinghere" "somestatehere")))
   (is (map? (get-user test_auth)))
   (is (vector? (get-fitness-activities test_auth)))
+  (is (vector? (get-fitness-activities test_auth 1)))
+  (is (vector? (get-fitness-activities test_auth 0 3)))
   (is (map? (get-fitness-activity test_auth (:uri (first (get-fitness-activities test_auth))))))
 
   )
 
-(is (map? (get-user test_auth)))
