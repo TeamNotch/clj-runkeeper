@@ -55,6 +55,15 @@
     :body
     json/read-json))
 
+(defn get-user-profile
+  "Returns the user's profile information"
+  ([{access_token :access_token} ]
+    (let [url (str api_url (:profile (get-user {:access_token access_token})))]
+      (-> (http/get url
+            {:oauth-token access_token})
+        :body
+        json/read-json))))
+
 (defn get-fitness-activities
   "Returns a list of fitness activities (runs)"
   ([{access_token :access_token}]

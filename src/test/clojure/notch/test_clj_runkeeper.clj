@@ -13,6 +13,12 @@
 (do
   (def test_auth {:access_token (:test_access_token properties)})
   )
+(->>
+(get-fitness-activity test_auth (:uri (first (get-fitness-activities test_auth))))
+:path
+(map #(println (str (:timestamp %) ", " (:latitude %) ", " (:longitude %) ", " (:altitude %))))
+)
+
 
 (deftest test-basics
 
@@ -20,6 +26,7 @@
   (is (string? (get-auth-url "http://notch.me/somethinghere")))
   (is (string? (get-auth-url "http://notch.me/somethinghere" "somestatehere")))
   (is (map? (get-user test_auth)))
+  (is (map? (get-user-profile test_auth)))
   (is (vector? (get-fitness-activities test_auth)))
   (is (vector? (get-fitness-activities test_auth 1)))
   (is (vector? (get-fitness-activities test_auth 0 3)))
@@ -27,3 +34,4 @@
 
   )
 
+;(run-tests 'notch.test-clj-runkeeper)
